@@ -1,7 +1,7 @@
 module Globalize
   module AttributeMethods
     module Serialization
-      def serialize(attr_name, class_name_or_coder = nil, **options)
+      def serialize(attr_name, coder = nil, **options)
         if respond_to?(:globalize_serialized_attributes) &&
            respond_to?(:globalize_serialized_attributes=)
 
@@ -11,12 +11,12 @@ module Globalize
             globalize_serialized_attributes.dup
 
           self.globalize_serialized_attributes[attr_name] = {
-            coder: class_name_or_coder
+            coder: coder
           }.merge(options)
         end
 
-        if class_name_or_coder
-          super(attr_name, class_name_or_coder, **options)
+        if coder
+          super(attr_name, coder, **options)
         else
           super(attr_name, **options)
         end
