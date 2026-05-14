@@ -10,16 +10,23 @@ module Globalize
           self.globalize_serialized_attributes =
             globalize_serialized_attributes.dup
 
-          self.globalize_serialized_attributes[attr_name] = {
-            coder: coder
-          }.merge(options)
+          serialization_options =
+            coder.is_a?(Class) &&
+            [Array, Hash].include?(coder) ?
+              { type: coder } :
+              { coder: coder }
+
+          self.globalize_serialized_attributes[attr_name] =
+            serialization_options.merge(options)
         end
 
-        if coder
-          super(attr_name, coder, **options)
-        else
-          super(attr_name, **options)
-        end
+        serialization_options =
+          coder.is_a?(Class) &&
+          [Array, Hash].include?(coder) ?
+            { type: coder } :
+            { coder: coder }
+
+        super(attr_name, **serialization_options, **options)
       end
     end
   end
